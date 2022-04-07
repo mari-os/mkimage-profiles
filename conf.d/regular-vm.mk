@@ -1,6 +1,17 @@
 ifeq (vm,$(IMAGE_CLASS))
 
-mixin/vm-archdep:: ; @:
+#ifeq (,$(filter-out qcow2 qcow2c,$(IMAGE_TYPE)))
+vm/regular-systemd: vm/systemd-net use/vmguest/kvm use/tty/S0 \
+	use/deflogin/root use/net/networkd/resolved
+	@$(call add,BASE_PACKAGES,apt-repo)
+	@$(call add,BASE_PACKAGES,hasher nfs-clients git rpm-build)
+	@$(call add,BASE_PACKAGES,kernel-build-tools gear)
+	@$(call add,BASE_PACKAGES,systemd-settings-disable-kill-user-processes)
+	@$(call add,DEFAULT_SERVICES_ENABLE,nfs-client.target)
+	@$(call add,DEFAULT_SERVICES_DISABLE,consolesaver)
+#endif
+
+mixin/vm-archdep:: use/auto-resize; @:
 
 ifeq (,$(filter-out i586 x86_64 armh aarch64,$(ARCH)))
 mixin/vm-archdep::
@@ -21,20 +32,22 @@ mixin/vm-archdep:: use/bootloader/uboot
 	@$(call set,KFLAVOURS,un-def)
 endif
 
+mixin/vm-archdep-x11: mixin/vm-archdep +vmguest; @:
+
 mixin/regular-vm-base: use/firmware use/ntp/chrony use/repo \
 	use/services/lvm2-disable
 ifneq (,$(filter-out i586 x86_64,$(ARCH)))
 	@$(call add,DEFAULT_SERVICES_DISABLE,multipathd)
 endif
-	@$(call add,THE_PACKAGES,udev-rule-generator)
-	@$(call add,DEFAULT_SERVICES_ENABLE,udevd-final)
 	@$(call add,THE_PACKAGES,bash-completion mc update-kernel)
 	@$(call add,THE_PACKAGES,vim-console)
 	@$(call add,KMODULES,staging)
+	@$(call set,REPO,http/yandex)
 
 mixin/regular-vm-jeos: mixin/regular-vm-base use/deflogin/root \
 	use/net/etcnet use/net/dhcp
 	@$(call add,THE_PACKAGES,livecd-net-eth)
+	@$(call add,THE_LISTS, $(call tags,base network))
 	@$(call add,DEFAULT_SERVICES_ENABLE,getty@tty1 livecd-net-eth)
 
 mixin/regular-vm-x11:: mixin/regular-vm-base mixin/regular-x11 \
@@ -67,37 +80,36 @@ vm/.regular-qt: vm/.regular-desktop use/x11/sddm; @:
 vm/regular-jeos-systemd: vm/systemd \
 	mixin/regular-vm-jeos mixin/vm-archdep
 	@$(call add,THE_PACKAGES,glibc-locales)
+	@$(call add,THE_PACKAGES,systemd-settings-disable-kill-user-processes)
 	@$(call try,VM_SIZE,3221225472)
 
 vm/regular-jeos-sysv: vm/bare mixin/regular-vm-jeos mixin/vm-archdep +power; @:
 
-vm/regular-builder: vm/regular-jeos-systemd mixin/regular-builder; @:
+vm/regular-builder: vm/regular-jeos-systemd mixin/regular-builder +nm
+	@$(call add,THE_PACKAGES,NetworkManager-tui)
 
 vm/regular-icewm-sysv: vm/.regular-desktop-sysv mixin/regular-icewm \
-	mixin/vm-archdep; @:
+	mixin/vm-archdep-x11; @:
 
-vm/regular-cinnamon: vm/.regular-gtk mixin/regular-cinnamon mixin/vm-archdep; @:
+vm/regular-cinnamon: vm/.regular-gtk mixin/regular-cinnamon mixin/vm-archdep-x11; @:
 
-vm/regular-deepin: vm/.regular-gtk mixin/regular-deepin mixin/vm-archdep; @:
+vm/regular-deepin: vm/.regular-gtk mixin/regular-deepin mixin/vm-archdep-x11; @:
 
-vm/regular-gnome3: vm/.regular-gtk mixin/regular-gnome3 mixin/vm-archdep
+vm/regular-gnome3: vm/.regular-gtk mixin/regular-gnome3 mixin/vm-archdep-x11
 	@$(call set,VM_SIZE,8589934592)
 
-vm/regular-lxde: vm/.regular-gtk mixin/regular-lxde mixin/vm-archdep; @:
+vm/regular-lxde: vm/.regular-gtk mixin/regular-lxde mixin/vm-archdep-x11; @:
 
-vm/regular-mate: vm/.regular-gtk mixin/mate-base mixin/vm-archdep
+vm/regular-mate: vm/.regular-gtk mixin/mate-base mixin/vm-archdep-x11
 	@$(call add,THE_PACKAGES,mate-reduced-resource)
 
-vm/regular-xfce: vm/.regular-gtk mixin/regular-xfce mixin/vm-archdep
+vm/regular-xfce: vm/.regular-gtk mixin/regular-xfce mixin/vm-archdep-x11
 	@$(call add,THE_PACKAGES,xfce-reduced-resource)
-ifeq (,$(filter-out armh aarch64,$(ARCH)))
-	@$(call set,KFLAVOURS,mp)
-endif
 
-vm/regular-kde5: vm/.regular-gtk mixin/regular-kde5 mixin/vm-archdep
+vm/regular-kde5: vm/.regular-gtk mixin/regular-kde5 mixin/vm-archdep-x11
 	@$(call set,VM_SIZE,7516192768)
 
-vm/regular-lxqt: vm/.regular-gtk mixin/regular-lxqt mixin/vm-archdep; @:
+vm/regular-lxqt: vm/.regular-gtk mixin/regular-lxqt mixin/vm-archdep-x11; @:
 
 ifeq (,$(filter-out aarch64 armh,$(ARCH)))
 # Raspberry Pi 4

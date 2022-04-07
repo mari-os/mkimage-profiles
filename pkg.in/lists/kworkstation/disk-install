@@ -2,13 +2,13 @@
 libGConf
 fonts-ttf-liberation
 # CryptoPRO
-cryptopro-preinstall-full
-cryptopro-preinstall
+cryptopro-preinstall-full@X86
+cryptopro-preinstall@X86
 gnupg-pkcs11-scd
 libpkcs11-helper
 gnupg2
 # 1C
-1c-preinstall
+1c-preinstall@X86
 # FSIN
 openssh-gostcrypto
 openssh-clients-gostcrypto openssh-askpass-common-gostcrypto
@@ -17,6 +17,8 @@ openssh-common-gostcrypto
 #
 openvpn-gostcrypto openvpn-plugins-gostcrypto alterator-openvpn-server
 #
+alterator-openvpn-server alterator-ca
+#
 freeipa-server freeipa-server-dns
 #
 alt-customize-branding
@@ -24,6 +26,14 @@ task-samba-dc bind-utils tdb-utils installer-feature-sambaDC-stage3
 #
 alterator-kiosk
 #
-# MISC
+# KDE
 #kde5-maxi
+kde5-kfloppy
+#kde5-telepathy
+# MISC
 exim
+admc
+vsftpd
+anonftp
+vlock
+telnet

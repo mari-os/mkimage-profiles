@@ -3,16 +3,17 @@ ifeq (distro,$(IMAGE_CLASS))
 
 # common ground (really lowlevel)
 distro/.regular-bare: distro/.base use/kernel/net use/docs/license \
-	use/stage2/fs use/stage2/hid use/stage2/md \
-	use/stage2/mmc use/stage2/net-install \
-	use/stage2/rtc use/stage2/sbc use/stage2/scsi use/stage2/usb
+	use/stage2/ata use/stage2/fs use/stage2/hid use/stage2/md \
+	use/stage2/mmc use/stage2/net use/stage2/net-nfs use/stage2/cifs \
+	use/stage2/rtc use/stage2/sbc use/stage2/scsi use/stage2/usb \
+	use/tty
 	@$(call try,SAVE_PROFILE,yes)
-	@$(call add,THE_PACKAGES,udev-rule-generator)
-	@$(call add,DEFAULT_SERVICES_ENABLE,udevd-final)
 ifeq (,$(BRANCH))
 ifeq (,$(filter-out i586 x86_64,$(ARCH)))
 	@$(call set,BOOTLOADER,grubpcboot)
 endif
+	@$(call set,LIVE_REPO,http/yandex)
+	@$(call set,REPO,http/yandex)
 endif
 
 # base target (for most images)
@@ -36,9 +37,9 @@ ifeq (,$(filter-out i586 x86_64 aarch64,$(ARCH)))
 distro/regular-net-install: distro/grub-net-install
 	@$(call set,BOOTCHAIN_OEM_SRV_NETINST,nightly.altlinux.org)
 ifeq (,$(filter-out i586 x86_64,$(ARCH)))
-	@$(call set,BOOTCHAIN_OEM_URL_NETINST,/sisyphus/snapshots/$(DATE)/regular-jeos-sysv-$(DATE)-$(ARCH).iso)
+	@$(call set,BOOTCHAIN_OEM_URL_NETINST,/sisyphus/snapshots/$(DATE)/regular-NAME-$(DATE)-$(ARCH).iso)
 else
-	@$(call set,BOOTCHAIN_OEM_URL_NETINST,/sisyphus-aarch64/snapshots/$(DATE)/regular-jeos-sysv-$(DATE)-$(ARCH).iso)
+	@$(call set,BOOTCHAIN_OEM_URL_NETINST,/sisyphus-aarch64/snapshots/$(DATE)/regular-NAME-$(DATE)-$(ARCH).iso)
 endif
 endif
 endif
@@ -58,7 +59,7 @@ distro/.regular-desktop: distro/.regular-wm use/branding/full \
 
 distro/.regular-gtk: distro/.regular-desktop use/x11/lightdm/gtk +plymouth; @:
 
-distro/.regular-desktop-sysv: distro/.regular-wm use/init/sysv/polkit; @:
+distro/.regular-desktop-sysv: distro/.regular-wm use/init/sysv/polkit +power; @:
 
 distro/.regular-gtk-sysv: distro/.regular-desktop-sysv \
 	use/syslinux/ui/gfxboot use/x11/gdm2.20; @:
@@ -67,7 +68,9 @@ distro/.regular-install: distro/.regular-base +installer \
 	use/branding use/bootloader/grub use/luks use/stage2/kms \
 	use/install2/fs use/install2/vnc use/install2/repo
 	@$(call add,INSTALL2_PACKAGES,fdisk)
+ifeq (,$(filter-out i586 x86_64,$(ARCH)))
 	@$(call add,INSTALL2_PACKAGES,xorg-conf-synaptics)
+endif
 	@$(call add,THE_LISTS,$(call tags,base regular))
 	@$(call add,INSTALL2_BRANDING,alterator notes)
 	@$(call add,THE_BRANDING,alterator)
@@ -76,7 +79,7 @@ distro/.regular-install: distro/.regular-base +installer \
 distro/.regular-jeos-base: distro/.regular-bare \
 	use/isohybrid use/branding \
 	use/install2/repo use/install2/packages \
-	use/net/etcnet use/power/acpi/button
+	use/net/etcnet
 	@$(call set,BOOTVGA,)
 	@$(call set,INSTALLER,altlinux-generic)
 	@$(call add,INSTALL2_BRANDING,alterator notes)
@@ -108,7 +111,7 @@ endif
 # NB:
 # - stock cleanup is not enough (or installer-common-stage3 deps soaring)
 distro/regular-jeos-sysv: distro/.regular-jeos-full use/cleanup/jeos/full \
-	+sysvinit
+	+sysvinit +power
 	@$(call add,BASE_PACKAGES,apt-conf-ignore-systemd)
 
 distro/regular-jeos-systemd: distro/.regular-jeos-full \
@@ -133,6 +136,11 @@ distro/.regular-install-x11-full: distro/.regular-install-x11 \
 	mixin/desktop-installer use/install2/fs use/efi/shell use/rescue/base
 	@$(call add,RESCUE_LISTS,$(call tags,rescue misc))
 	@$(call add,MAIN_PACKAGES,anacron man-whatis usb-modeswitch)
+
+distro/.regular-install-x11-systemd: distro/.regular-install-x11 \
+	use/x11/lightdm/gtk +systemd +systemd-optimal
+	@$(call add,THE_PACKAGES,bluez)
+	@$(call add,DEFAULT_SERVICES_ENABLE,bluetoothd)
 
 distro/regular-icewm-sysv: distro/.regular-gtk-sysv mixin/regular-icewm \
 	use/kernel/latest; @:
@@ -160,6 +168,9 @@ else
 endif
 endif
 
+distro/regular-xfce-install: distro/.regular-install-x11-systemd \
+	mixin/regular-xfce; @:
+
 distro/regular-xfce-sysv: distro/.regular-gtk-sysv mixin/regular-xfce-sysv; @:
 
 distro/regular-xfce-sysv-install: distro/.regular-install-x11-full \
@@ -169,7 +180,7 @@ distro/regular-lxde: distro/.regular-gtk mixin/regular-lxde; @:
 
 distro/regular-mate: distro/.regular-gtk mixin/regular-mate; @:
 
-distro/regular-enlightenment: distro/.regular-gtk use/x11/enlightenment +power; @:
+distro/regular-enlightenment: distro/.regular-gtk use/x11/enlightenment; @:
 
 distro/regular-cinnamon: distro/.regular-gtk mixin/regular-cinnamon; @:
 
@@ -233,7 +244,7 @@ distro/.regular-server-full: distro/.regular-server-managed \
 distro/regular-server-systemd: distro/.regular-server-full \
 	+systemd +systemd-optimal; @:
 
-distro/regular-server-sysv: distro/.regular-server-full +sysvinit; @:
+distro/regular-server-sysv: distro/.regular-server-full +sysvinit +power; @:
 
 distro/.regular-server-ovz: distro/.regular-server \
 	use/server/ovz use/server/groups/tools use/cleanup/x11-alterator
@@ -258,12 +269,24 @@ distro/regular-server-pve: distro/.regular-server-base +systemd \
 		pve-firewall pve-ha-crm pve-manager pveproxy pvedaemon \
 		pvefw-logger pve-ha-lrm pvenetcommit pvestatd spiceproxy)
 
-distro/regular-builder: distro/.regular-bare mixin/regular-builder \
-	use/dev/builder/full use/stage2/kms +sysvinit +efi +power \
-	use/live/base use/live/rw use/live/repo/online use/live/textinstall \
+distro/.regular-builder: distro/.regular-bare mixin/regular-builder \
+	use/stage2/kms use/firmware +efi +power \
+	use/live/base use/live/rw use/live/repo use/live/textinstall \
 	use/isohybrid use/syslinux/timeout/300 use/grub/timeout/30
 	@$(call add,THE_PACKAGES,ccache cifs-utils wodim)
+
+distro/regular-builder: distro/.regular-builder +systemd +nm \
+	use/dev/builder/live/systemd
+	@$(call add,THE_PACKAGES,NetworkManager-tui)
+ifeq (,$(filter-out x86_64 aarch64,$(ARCH)))
+	@$(call set,KFLAVOURS,un-def)
+endif
+
+# old regular-builder
+distro/regular-builder-sysv: distro/.regular-builder +sysvinit \
+	use/dev/builder/live/sysv
 	@$(call add,THE_PACKAGES,livecd-net-eth)
+	@$(call add,DEFAULT_SERVICES_ENABLE,gpm)
 
 distro/regular-server-samba4: distro/.regular-server-managed +systemd
 	@$(call add,THE_LISTS,$(call tags,server && (sambaDC || alterator)))

@@ -23,11 +23,12 @@ ifeq (,$(filter-out i586 x86_64 aarch64,$(ARCH)))
 endif
 
 distro/grub-net-install: distro/.base use/stage2/net-install +efi \
-	use/firmware use/grub/sdab_bios.cfg
+	use/firmware use/grub/sdab_bios.cfg use/l10n
 ifeq (,$(filter-out i586 x86_64,$(ARCH)))
 	@$(call set,BOOTLOADER,grubpcboot)
 endif
 	@$(call set,KFLAVOURS,un-def std-def)
+	@$(call set,GRUB_DEFAULT,network)
 endif
 
 distro/rescue: distro/.base use/rescue use/syslinux/ui/menu use/stage2/cifs \
@@ -58,7 +59,7 @@ distro/.live-kiosk: distro/.base use/live/base use/live/autologin \
 
 distro/live-builder-mini: distro/.live-base use/dev/builder/base \
 	use/syslinux/timeout/30 use/isohybrid \
-	use/stage2/net-eth use/net-eth/dhcp; @:
+	use/stage2/net-eth use/net-eth/dhcp +sysvinit; @:
 
 distro/live-builder: distro/live-builder-mini \
 	use/dev/builder/full use/live/rw +efi; @:
@@ -66,8 +67,10 @@ distro/live-builder: distro/live-builder-mini \
 distro/live-install: distro/.live-base use/live/textinstall; @:
 distro/.livecd-install: distro/.live-base use/live/install; @:
 
-distro/live-icewm: distro/.live-desktop use/x11/lightdm/gtk +icewm; @:
-distro/live-fvwm: distro/.live-desktop-ru use/x11/lightdm/gtk use/x11/fvwm; @:
+distro/live-icewm: distro/.live-desktop use/x11/gdm2.20 use/ntp +icewm \
+	+sysvinit; @:
+distro/live-fvwm: distro/.live-desktop-ru use/x11/gdm2.20 use/ntp use/x11/fvwm \
+	+sysvinit; @:
 
 distro/live-rescue: distro/live-icewm +efi
 	@$(call add,LIVE_LISTS,$(call tags,rescue && (fs || live || x11)))
@@ -96,11 +99,8 @@ distro/live-webkiosk: distro/live-webkiosk-mini use/live/desktop; @:
 distro/live-webkiosk-chromium: distro/.live-webkiosk use/fonts/ttf/google +efi
 	@$(call add,LIVE_PACKAGES,livecd-webkiosk-chromium)
 
-distro/live-webkiosk-seamonkey: distro/.live-webkiosk use/fonts/ttf/google
-	@$(call add,LIVE_PACKAGES,livecd-webkiosk-seamonkey)
-
-distro/live-webkiosk-qupzilla: distro/.live-webkiosk use/fonts/otf/mozilla
-	@$(call add,LIVE_PACKAGES,livecd-webkiosk-qupzilla)
+#distro/live-webkiosk-seamonkey: distro/.live-webkiosk use/fonts/ttf/google
+#	@$(call add,LIVE_PACKAGES,livecd-webkiosk-seamonkey)
 
 distro/.live-3d: distro/.live-x11 use/x11/3d \
 	use/x11/lightdm/gtk +icewm +sysvinit
@@ -113,6 +113,7 @@ distro/.live-games: distro/.live-kiosk use/x11/3d use/sound \
 	@$(call set,KFLAVOURS,un-def)
 	@$(call add,LIVE_LISTS,$(call tags,xorg misc))
 	@$(call add,LIVE_PACKAGES,pciutils input-utils glxgears glxinfo)
+	@$(call add,LIVE_PACKAGES,glibc-locales apulse)
 	@$(call add,DEFAULT_SERVICES_DISABLE,rpcbind alteratord messagebus)
 	@$(call add,SERVICES_DISABLE,livecd-net-eth)
 
@@ -131,11 +132,10 @@ distro/live-0ad: distro/.live-games
 
 distro/live-gimp: distro/live-icewm use/live/ru
 	@$(call add,LIVE_LISTS,$(call tags,desktop sane))
-	@$(call add,LIVE_PACKAGES,gimp tintii immix fim)
+	@$(call add,LIVE_PACKAGES,gimp immix)
 	@$(call add,LIVE_PACKAGES,darktable geeqie rawstudio ufraw)
-	@$(call add,LIVE_PACKAGES,macrofusion python-module-pygtk-libglade)
+	@$(call add,LIVE_PACKAGES,macrofusion)
 	@$(call add,LIVE_PACKAGES,qtfm openssh-clients rsync usbutils)
-	@$(call add,LIVE_PACKAGES,design-graphics-sisyphus2)
 
 # NB: use/browser won't do as it provides a *single* browser ATM
 distro/live-privacy: distro/.base +efi +systemd +vmguest \

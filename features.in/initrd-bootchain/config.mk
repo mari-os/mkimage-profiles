@@ -1,6 +1,6 @@
 use/initrd-bootchain: use/uuid-iso
 	@$(call add_feature)
-	@$(call set,STAGE1_INITRD,initrd-pipeline)
+	@$(call set,STAGE1_INITRD,initrd-bootchain)
 	@$(call set,STAGE1_PACKAGES,make-initrd-bootchain)
 	@$(call set,STAGE1_INITRD_TYPEARGS,$(shell echo "root=bootchain bootchain=fg,altboot automatic"))
 	@$(call set,STAGE1_INITRD_BOOTMETHOD,$(shell echo "method:cdrom,uuid:$(UUID_ISO)"))
@@ -19,3 +19,5 @@ use/initrd-bootchain: use/uuid-iso
 	@$(call try,BOOTCHAIN_OEM_SRV_NETINST,)
 	@$(call try,BOOTCHAIN_OEM_NFS_NETINST,/srv/public/netinst)
 	@$(call try,BOOTCHAIN_OEM_CIFS_NETINST,/netinst)
+	@$(call try,BOOTCHAIN_LOGFILE,/var/log/chaind.log)
+	@$(call try,BOOTCHAIN_LOG_VT,3)

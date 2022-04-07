@@ -31,40 +31,40 @@ ve/generic: ve/base use/repo
 ve/openvpn: ve/bare
 	@$(call add,BASE_LISTS,$(call tags,server openvpn))
 
-ve/pgsql94: ve/generic
-	@$(call add,BASE_PACKAGES,postgresql9.4-server)
+ve/pgsql: ve/generic
+	@$(call add,BASE_PACKAGES,postgresql-server)
 
 ve/samba-DC: ve/generic
 	@$(call add,BASE_PACKAGES,task-samba-dc glibc-locales net-tools)
 
 ve/sysvinit-etcnet: ve/base use/net/etcnet \
-        use/control/sudo-su use/repo use/net-ssh
+	use/control/sudo-su use/repo use/net-ssh
 	@$(call add,BASE_PACKAGES,glibc-gconv-modules glibc-locales tzdata bash-completion iptables curl)
 
 ve/systemd-bare: ve/.apt use/init/systemd \
 	use/control/sudo-su use/repo use/net-ssh
 	@$(call add,BASE_PACKAGES,interactivesystem su)
 
-ve/systemd-networkd: ve/systemd-bare use/net/networkd/resolved
+ve/systemd-base: ve/systemd-bare
 	@$(call add,BASE_PACKAGES,apt-scripts)
 	@$(call add,BASE_PACKAGES,systemd-settings-disable-kill-user-processes)
 	@$(call add,BASE_PACKAGES,glibc-gconv-modules glibc-locales tzdata bash-completion iptables curl)
 
-ve/systemd-etcnet: ve/systemd-bare use/net/etcnet
-	@$(call add,BASE_PACKAGES,apt-scripts)
-	@$(call add,BASE_PACKAGES,systemd-settings-disable-kill-user-processes)
-	@$(call add,BASE_PACKAGES,glibc-gconv-modules glibc-locales tzdata bash-completion iptables curl)
+ve/systemd-networkd: ve/systemd-base use/net/networkd/resolved; @:
+ve/systemd-etcnet: ve/systemd-base use/net/etcnet; @:
 
-ve/lxc-sysvinit-etcnet: ve/sysvinit-etcnet use/net-eth use/lxc-guest
-	@$(call add,BASE_PACKAGES,vim-console)
+ve/.lxc-bare: use/lxc-guest
 	@$(call add,NET_ETH,eth0:dhcp)
 
-ve/lxc-systemd-networkd: ve/systemd-networkd use/net-eth/networkd use/lxc-guest
+ve/.lxc-base: ve/.lxc-bare
 	@$(call add,BASE_PACKAGES,vim-console)
-	@$(call add,NET_ETH,eth0:dhcp)
 
-ve/lxc-systemd-etcnet: ve/systemd-etcnet use/net-eth use/lxc-guest
-	@$(call add,BASE_PACKAGES,vim-console)
-	@$(call add,NET_ETH,eth0:dhcp)
+ve/lxc-sysvinit-etcnet: ve/.lxc-base ve/sysvinit-etcnet use/net-eth; @:
+ve/lxc-systemd-etcnet: ve/.lxc-base ve/systemd-etcnet use/net-eth; @:
+ve/lxc-systemd-networkd: ve/.lxc-base \
+	ve/systemd-networkd use/net-eth/networkd; @:
+
+ve/lxc-builder: ve/lxc-sysvinit-etcnet use/dev/builder/base use/repo
+	@$(call add,BASE_LISTS,openssh)
 
 endif

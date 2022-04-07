@@ -1,6 +1,8 @@
 
+sysctl-conf-userns
 firmware-alsa-sof
 
+pinentry-qt5
 gst-plugins-good1.0-qt5
 pavucontrol
 
@@ -15,16 +17,20 @@ alterator-fbi
 alterator-groups
 alterator-limits
 alterator-logs
+alterator-multiseat
 alterator-net-iptables
 alterator-net-openvpn
 alterator-net-routing
 alterator-net-shares
 alterator-notes
+alterator-osec
+alterator-ports-access
 alterator-quota
 alterator-secsetup
 alterator-services
 alterator-sysconfig
 alterator-updates
+alterator-update-kernel
 alterator-x11
 alterator-xkb
 alterator-zram-swap
@@ -46,15 +52,16 @@ bind-utils
 cpufreq-simple
 cifs-utils
 curl
-ddcprobe
+ddcprobe@X86
 dmidecode
 easy-rsa
 eepm
+eepm-yum
 etcnet-full
 fdisk
-fuse-exfat
 gpm
 hdparm
+inxi
 ipcalc
 jfsutils
 libproxy-kde
@@ -64,10 +71,10 @@ lsblk
 lshw
 mc-full
 make-initrd-lvm
-make-initrd-ucode
+make-initrd-ucode@X86
 man-pages-ru
 mtr
-nano-editor
+mcedit-editor
 net-tools
 netcat
 netlist
@@ -88,6 +95,7 @@ system-report
 systemd-analyze
 tcpdump
 udev-android
+udev-extras
 udev-rule-generator-cdrom
 udev-rules-ioschedulers
 update-kernel
@@ -96,16 +104,18 @@ usbutils
 #userpasswd
 vim-console
 wget
+xauthority-hostname-updater
 xinput
 xfsprogs
 xorg-conf-synaptics
 xorg-conf-libinput-touchpad
 
 ocl-nvidia
-libva-driver-intel
+libva-driver-intel@X86
 libva-intel-media-driver@x86_64
 #libva-driver-vdpau
 #libvdpau-va-gl
+vulkan-amdgpu@X86
 
 chromium-gost
 
@@ -115,11 +125,13 @@ openssh openssh-clients openssh-askpass-common openssh-server openssh-common ope
 kde5-network-manager-nm
 kde5-video-player-smplayer
 kde5-audio-player-qmmp
-kde5-small
+kde5-mini@META
+kde5-small@META
 plasma5-kscreen
 
 alt-app-starter
 
 # GTK2/GTK3 theme
+gtk-theme-breeze
 gtk3-theme-breeze
 gtk2-theme-breeze

@@ -7,9 +7,14 @@ plasma5-bluedevil
 kde5-khelpcenter
 kde5-filelight
 kde5-spectacle
+inxi
+glmark2
 glxgears
+glxinfo
 efivar
 sos
 system-report
 startup-rescue
 qt-fsarchiver
+vulkan-tools
+f2fs-tools

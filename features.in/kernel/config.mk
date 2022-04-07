@@ -23,12 +23,11 @@ endif
 
 # r8168 is a kludge, never install it by default
 use/kernel/net:
-	@$(call add,THE_KMODULES,e1000e)
 	@$(call add,THE_KMODULES,r8125)
 	@$(call add,MAIN_KMODULES,r8168 rtl8168)
 
 use/kernel/wireless: use/firmware/wireless
-	@$(call add,THE_KMODULES,bcmwl staging)
+	@$(call add,THE_KMODULES,staging)
 	@$(call add,THE_KMODULES,rtl8188fu rtl8192eu rtl8723de rtl8812au)
 	@$(call add,THE_KMODULES,rtl8821ce rtl8821cu rtl88x2bu rtl8723bu)
 	@$(call add,THE_KMODULES,rtw89)
@@ -42,6 +41,11 @@ use/kernel/drm: use/drm; @:
 
 use/kernel/server:
 	@$(call add,THE_KMODULES,ipset kvm)
+
+use/kernel/disable-usb-autosuspend:
+	@$(call add,BASE_BOOTARGS,usbcore.autosuspend=-1)
+	@$(call add,STAGE2_BOOTARGS,usbcore.autosuspend=-1)
+	@$(call add,SYSTEM_PACKAGES,disable-usb-autosuspend)
 
 # for vm targets
 use/kernel/initrd-setup: use/kernel

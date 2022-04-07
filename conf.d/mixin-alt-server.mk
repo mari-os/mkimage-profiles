@@ -1,5 +1,5 @@
 mixin/alt-server: server_groups = $(addprefix centaurus/,\
-	10-alterator 20-server-apps  50-freeipa 70-dev 90-docs sambaDC buildsystem dhcp-server-a diag-tools dns-server-a ftp-server-a mail-server-a mediawiki owncloud domain-server freeipa-client nm-daemon openuds openuds-tunnel admc)
+	10-alterator 20-server-apps  50-freeipa 70-dev sambaDC buildsystem dhcp-server-a diag-tools dns-server-a ftp-server-a mail-server-a mediawiki owncloud domain-server freeipa-client nm-daemon systemd-networkd openuds openuds-tunnel admc)
 
 mixin/alt-server: +installer +systemd \
 	use/branding/notes use/syslinux/ui/gfxboot \
@@ -17,7 +17,8 @@ mixin/alt-server: +installer +systemd \
 	@$(call add,THE_BRANDING,alterator)
 ifeq (,$(filter-out i586 x86_64 aarch64,$(ARCH)))
 	@$(call add,THE_BRANDING,bootloader bootsplash)
-	@$(call set,KFLAVOURS,un-def)
+	@$(call set,KFLAVOURS,std-def)
+	@$(call add,MAIN_GROUPS,centaurus/pve-backup-server)
 endif
 	@$(call add,BASE_LISTS,centaurus/base)
 	@$(call add,BASE_LISTS,centaurus/base-server)
@@ -50,7 +51,7 @@ endif
 	@$(call add,INSTALL2_PACKAGES,xorg-conf-synaptics)
 	@$(call add,COMMON_PACKAGES,vim-console)
 	@$(call add,DEFAULT_SERVICES_ENABLE,rpcbind sshd bind)
-	@$(call set,META_VOL_ID,ALT Server 9.1 $(ARCH))
+	@$(call set,META_VOL_ID,ALT Server 10.0 $(ARCH))
 	@$(call set,META_PUBLISHER,BaseALT Ltd)
 	@$(call set,META_VOL_SET,ALT)
-	@$(call set,META_APP_ID,ALT Server 9.1.0 $(ARCH) $(shell date +%F))
+	@$(call set,META_APP_ID,ALT Server 10.0 $(ARCH) $(shell date +%F))

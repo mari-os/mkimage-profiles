@@ -63,7 +63,7 @@ else
 	@$(call add,THE_LISTS,workstation/libreoffice)
 endif
 
-vm/alt-workstation:: vm/.alt-workstation
+vm/alt-workstation:: vm/.alt-workstation +vmguest
 ifeq (,$(filter-out i586 x86_64,$(ARCH)))
 	@$(call add,THE_LISTS,workstation/vlc)
 endif
@@ -82,7 +82,6 @@ ifeq (,$(filter-out aarch64 armh,$(ARCH)))
 vm/alt-workstation-rpi: vm/.alt-workstation use/arm-rpi4/full
 	@$(call add,THE_LISTS,workstation/celluloid)
 	@$(call set,THE_BROWSER,chromium)
-	@$(call add,THE_PACKAGES,chromium firefox-esr-ru-)
 endif
 
 ifeq (,$(filter-out aarch64,$(ARCH)))
@@ -106,6 +105,6 @@ endif
 
 vm/alt-workstation-cloud: vm/cloud-systemd use/x11/lightdm/gtk \
 	mixin/alt-workstation
-	@$(call add,THE_PACKAGES,cloud-init-config-netplan)
+	@$(call add,THE_PACKAGES,cloud-init-config-netplan systemd-networkd)
 	@$(call add,SYSTEMD_SERVICES_DISABLE,network.service)
 endif

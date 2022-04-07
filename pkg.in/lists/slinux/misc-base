@@ -48,7 +48,7 @@ gparted
 #tango-icon-theme
 #tango-icon-theme-extras
 #ntfsprogs-
-driconf-
+#driconf-
 aspell-ru-lebedev
 vulkan-amdgpu@X86
 
@@ -134,7 +134,7 @@ alterator-xkb
 mate-search-tool
 libmate-desktop
 yelp
-altmediawriter
+altmediawriter@!riscv64
 
 #compiz
 #python-module-fusion-icon-gtk
@@ -159,7 +159,7 @@ plymouth@!E2K
 #branding-simply-linux-bootsplash
 
 # Office
-java-11-openjdk@!mipsel
+java-11-openjdk@!mipsel,riscv64
 atril-gtk
 atril-gtk-djvu
 atril-gtk-pixbuf

@@ -42,7 +42,7 @@ profile/init: distclean
 	if [ -z "$(QUIET)" ]; then \
 		echo -n "$(TIME) initializing BUILDDIR: "; \
 	fi; \
-	rsync -qaxH --exclude .gitignore --delete-after image.in/ "$(BUILDDIR)"/; \
+	rsync -qaxH --delete-after image.in/ "$(BUILDDIR)"/; \
 	mkdir "$(BUILDDIR)"/.mki; \
 	} >&2
 	@$(call put,ifndef DISTCFG_MK)
@@ -70,6 +70,9 @@ profile/init: distclean
 			fi >&2; \
 			[ "$(CHECK)" = 0 ] || exit 1; \
 		fi; \
+	fi; \
+	if type -t git >&/dev/null && [ -d .git ]; then \
+		git show -s --format=%H > "$(BUILDDIR)"/commit; \
 	fi; \
 	mp-commit -i "$(BUILDDIR)" "derivative profile initialized"; \
 	if [ -w . ]; then \
@@ -131,7 +134,7 @@ profile/dump-vars:
 	fi $(LOG)
 
 # step 3 entry point: copy the needed parts into BUILDDIR
-profile/populate: profile/finalize profile/dump-vars
+profile/populate: profile/finalize profile/dump-vars make-aptbox
 	@for dir in sub.in features.in pkg.in; do \
 		$(MAKE) -C $$dir $(LOG); \
 	done

@@ -81,7 +81,7 @@ btrfs-progs
 e2fsprogs
 f2fs-tools
 jfsprogs
-nilfs-utils
+nilfs-utils@!riscv64
 mtd-utils
 reiser4progs
 reiserfsprogs
@@ -133,7 +133,7 @@ archivemount
 fuse-7z
 
 # Applications/Networking
-arpwatch
+#arpwatch
 cifs-utils
 curl
 davfs2

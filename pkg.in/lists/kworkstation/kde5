@@ -2,53 +2,53 @@
 pam0_kwallet5
 
 catdoc
-libnss-mdns
+gdb
 fuse-cryfs
+libnss-mdns
 
-pinentry-qt5
+alt-csp-cryptopro
+rosa-crypto-tool
 quick-usb-formatter
-rosa-imagewriter
+altmediawriter
 #
 gparted
 #
 kde5-ksystemlog
 kde5-kcm-grub2
+#
+#appinstall@X86
 synaptic-kde
 #plasma5-discover-maxi
 plasma5-discover
+flatpak-repo-flathub
 plasma5-discover-flatpak
 plasma5-discover-fwupd
-apt-indicator
+plasma5-discover-packagekit
 openssl-gost-engine
 kde5-kreslimit
 kde5-file-actions-gost
 
 #altlinux-freedesktop-menu-nested-menu
+alt-desktop-wallpapers
 
-chromium-gost
+# #browser chromium-gost#
 #chromium-ublock_origin
-ppapi-plugin-adobe-flash
 
 qmmp1
 qmmp-skins
 
-kde5-big
-
 samba
 # system-config-samba
 
-kde5-telepathy
-kde5-konversation
-choqok
-#ring-client-kde5
+kde5-messenger-client-mix
 kde5-connect
 
 isomaster
 kde5-k3b
-fbreader
+#fbreader
 #kde5-basket
-kmymoney
-kmymoney-i18n
+#kmymoney
+#kmymoney-i18n
 #kde5-plasma-yawp
 
 qstardict
@@ -57,7 +57,7 @@ stardict-slovnyk_en-ru
 stardict-slovnyk_ru-en
 #stardict-slovnyk_en-uk
 #stardict-slovnyk_uk-en
-stardict-wn
+#stardict-wn
 
 hunspell-ru-lebedev
 #hunspell-uk
@@ -70,12 +70,16 @@ LibreOffice-still-langpack-ru
 #LibreOffice-still-langpack-tt
 #LibreOffice-still-langpack-uk
 #^docs-ooo_infra_.*
+LibreOffice-plugin-altcsp
 
 kamoso
 
 kde5-ktorrent
 #eiskaltdcpp-qt
-kde5-kio-gdrive
+#kde5-kio-gdrive
 
 # 3dparty
 #skype-preinstall@IA32
+
+kde5@META
+kde5-big@META

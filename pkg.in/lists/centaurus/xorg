@@ -15,7 +15,7 @@ xorg-drv-vboxvideo@X86
 xorg-drv-synaptics
 xorg-drv-libinput
 # for those who need these
-xorg-drv-vesa
+xorg-drv-vesa@X86
 xorg-drv-qxl@X86
 xorg-drv-keyboard
 xorg-drv-mouse
@@ -37,7 +37,7 @@ fonts-ttf-liberation
 fonts-ttf-dejavu
 fonts-bitmap-terminus
 fonts-otf-stix
-fonts-ttf.*droid*
+fonts-ttf-google-droid*
 x-cursor-theme-jimmac
 
 menu-icons-default
@@ -55,9 +55,7 @@ spice-vdagent
 xorg-drv-qxl
 
 kernel-modules-drm-std-def@!E2K
-kernel-modules-drm-radeon-std-def@!E2K
 kernel-modules-drm-nouveau-std-def@!E2K
 kernel-modules-v4l-std-def@!E2K
-kernel-modules-lirc-std-def@!E2K
 
 cpio

@@ -39,7 +39,7 @@ mixin/e2k-mate: use/e2k/x11 use/x11/xorg use/fonts/install2 \
 
 ### regular.mk
 mixin/regular-x11: use/luks use/volumes/regular \
-	use/browser/firefox \
+	use/browser/firefox use/kernel/disable-usb-autosuspend \
 	use/branding use/ntp/chrony use/services/lvm2-disable
 	@$(call add,THE_LISTS,$(call tags,(base || desktop) && regular && !extra))
 	@$(call add,THE_PACKAGES,disable-usb-autosuspend)
@@ -51,10 +51,11 @@ ifneq (,$(BRANCH))
 endif
 
 # common WM live/installer bits
-mixin/regular-desktop: +alsa +power +nm-native \
+mixin/regular-desktop: +alsa +nm-native \
 	use/x11/xorg use/xdg-user-dirs use/l10n \
 	use/fonts/otf/adobe use/fonts/otf/mozilla use/branding/notes
 	@$(call add,THE_PACKAGES,pam-limits-desktop beesu polkit dvd+rw-tools)
+	@$(call add,THE_PACKAGES,polkit-rule-admin-root)
 	@$(call add,THE_BRANDING,alterator graphics indexhtml)
 ifneq (,$(filter-out e2k%,$(ARCH)))
 	@$(call add,THE_BRANDING,notes)
@@ -65,6 +66,8 @@ endif
 	@$(call add,DEFAULT_SERVICES_DISABLE,gssd idmapd krb5kdc rpcbind)
 	@$(call add,DEFAULT_SERVICES_ENABLE,cups)
 	@$(call add,DEFAULT_SERVICES_ENABLE,alteratord)
+	@$(call add,CONTROL,fusermount:public)
+	@$(call add,CONTROL,libnss-role:disabled)
 
 mixin/desktop-extra:
 	@$(call add,BASE_LISTS,$(call tags,(archive || base) && extra))
@@ -108,7 +111,7 @@ mixin/xfce-base: use/x11/xfce +nm-gtk \
 	@$(call add,THE_PACKAGES,xdg-user-dirs-gtk)
 
 mixin/regular-xfce: mixin/xfce-base use/domain-client +pulse
-	@$(call add,THE_PACKAGES,light-locker pavucontrol)
+	@$(call add,THE_PACKAGES,pavucontrol xscreensaver-frontend)
 	@$(call add,THE_PACKAGES,xfce4-pulseaudio-plugin xfce-polkit)
 
 mixin/regular-xfce-sysv: mixin/xfce-base \
@@ -123,8 +126,10 @@ mixin/regular-lxqt: use/x11/lxqt +nm-gtk; @:
 mixin/mate-base: use/x11/mate use/fonts/ttf/google +nm-gtk
 	@$(call add,THE_LISTS,$(call tags,mobile mate))
 
-mixin/regular-mate: mixin/mate-base use/domain-client
+mixin/regular-mate: mixin/mate-base use/domain-client; @:
+ifneq (,$(filter-out riscv64,$(ARCH)))
 	@$(call add,THE_LISTS,$(call tags,base smartcard))
+endif
 
 mixin/office: use/fonts/ttf/google use/fonts/ttf/xo
 	@$(call add,THE_LISTS,$(call tags,desktop && (cups || office)))
@@ -144,7 +149,6 @@ mixin/regular-builder: use/dev/builder/base use/net/dhcp use/ntp/chrony
 	@$(call add,THE_PACKAGES,bash-completion elinks gpm lftp openssh)
 	@$(call add,THE_PACKAGES,rpm-utils screen tmux wget zsh)
 	@$(call add,THE_PACKAGES,apt-repo aptitude eepm)
-	@$(call add,DEFAULT_SERVICES_ENABLE,gpm)
 
 ### vm.mk
 mixin/cloud-init:

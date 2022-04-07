@@ -43,21 +43,25 @@ use/slinux/services-disabled:
 
 use/slinux/services: use/slinux/services-enabled use/slinux/services-disabled
 
-ifeq (,$(filter-out riscv64,$(ARCH)))
-use/slinux/vm-base:: use/oem/vnc
-	@$(call set,KFLAVOURS,un-def)
-endif
-
 use/slinux/vm-base:: vm/systemd \
 	use/oem/distro use/slinux/mixin-base
 	@$(call add,THE_LISTS,slinux/games-base)
 	@$(call add,THE_LISTS,slinux/graphics-base)
 	@$(call add,THE_LISTS,slinux/multimedia-base)
 	@$(call add,THE_LISTS,slinux/net-base)
+ifeq (,$(filter-out riscv64,$(ARCH)))
+	@$(call add,THE_LISTS,slinux/claws-mail)
+endif
 	@$(call add,THE_PACKAGES,installer-feature-lightdm-stage3)
 	@$(call add,THE_PACKAGES,installer-feature-online-repo)
 	@$(call add,THE_PACKAGES,installer-feature-samba-usershares-stage2)
 	@$(call add,THE_PACKAGES,installer-feature-sudo-enable-by-default-stage3)
+
+ifeq (,$(filter-out riscv64,$(ARCH)))
+use/slinux/vm-base:: use/oem/vnc use/browser/epiphany
+	@$(call add,THE_PACKAGES,xfce-reduced-resource)
+	@$(call set,KFLAVOURS,un-def)
+endif
 
 use/slinux/mixin-base: use/slinux use/x11/xorg use/x11/lightdm/gtk +pulse \
 	+nm use/x11/gtk/nm +systemd +systemd-optimal +wireless \
@@ -83,6 +87,9 @@ else
 	@$(call add,THE_LISTS,slinux/browser-chromium)
 	@$(call add,THE_LISTS,slinux/multimedia-player-vlc)
 endif
+ifeq (,$(filter-out riscv64,$(ARCH)))
+	@$(call add,THE_PACKAGES,abiword gnumeric)
+endif
 ifeq (,$(filter-out armh aarch64 i586 x86_64,$(ARCH)))
 	@$(call set,KFLAVOURS,std-def)
 endif
@@ -90,7 +97,7 @@ endif
 use/slinux/base: use/isohybrid use/luks \
 	+plymouth use/memtest +vmguest \
 	+efi \
-	use/stage2/fs use/stage2/hid use/stage2/md \
+	use/stage2/ata use/stage2/fs use/stage2/hid use/stage2/md \
 	use/stage2/mmc use/stage2/net use/stage2/net-nfs use/stage2/cifs \
 	use/stage2/rtc use/stage2/sbc use/stage2/scsi use/stage2/usb \
 	use/live/x11 use/live/rw use/install2/fonts \

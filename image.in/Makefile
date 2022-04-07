@@ -79,7 +79,7 @@ copy-tree: $(SAVE_PROFILE:%=save-profile)
 
 save-profile:
 	@mkdir -p files/.disk; \
-	git archive --prefix=mkimage-profile/ HEAD ":!.work" \
+	git archive --prefix=mkimage-profile/ HEAD \
 	| gzip -9 > files/.disk/profile.tgz
 
 .PHONY: imagedir postprocess debug
@@ -117,6 +117,7 @@ postprocess: | $(addprefix postprocess-,$(sort $(POSTPROCESS_TARGETS)))
 
 debug::
 	@echo "TOPDIR=$(TOPDIR)"
+	@echo "CURDIR=$(CURDIR)"
 	@echo "IMAGEDIR=$(IMAGEDIR)"
 	@echo "ARCH=$(ARCH)"
 	@echo "GLOBAL_TARGET=$(GLOBAL_TARGET)"

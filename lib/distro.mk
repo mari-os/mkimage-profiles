@@ -10,16 +10,21 @@ ifeq (distro,$(IMAGE_CLASS))
 distro/.init: profile/bare
 	@$(call try,META_PREPARER,mkimage-profiles)
 	@$(call try,META_APP_ID,$(IMAGE_NAME))
-	@$(call set,META_PUBLISHER,ALT Linux Team)
+	@$(call try,META_PUBLISHER,ALT Linux Team)
 
 distro/.boot: distro/.init boot/iso
-	@$(call set,META_VOL_ID,ALT $(IMAGE_NAME)/$(ARCH))
-	@$(call set,META_VOL_SET,ALT)
+ifeq (,$(BRANCH))
+	@$(call try,META_VOL_ID,ALT $(IMAGE_NAME)/$(ARCH))
+else
+	@$(call try,IMAGE_FLAVOUR,$(subst alt-$(BRANCH)-,,$(IMAGE_NAME)))
+	@$(call try,META_VOL_ID,ALT $(BRANCH) $$(IMAGE_FLAVOUR)/$(ARCH))
+endif
+	@$(call try,META_VOL_try,ALT)
 
 # NB: the last flavour in KFLAVOURS gets to be the default one;
 # the kernel packages regexp evaluation has to take place at build stage
 distro/.base: distro/.boot use/kernel
-	@$(call set,META_SYSTEM_ID,LINUX)
+	@$(call try,META_SYSTEM_ID,LINUX)
 
 # this one should not be fundamental as it appears (think armh)
 distro/.installer: distro/.base use/bootloader/grub +installer; @:

@@ -70,7 +70,7 @@ distro/.server-v-base: distro/.base distro/.installer \
 	use/kernel/server use/kernel/drm \
 	use/firmware use/firmware/cpu \
 	use/net/etcnet use/net-ssh \
-	use/stage2/fs use/stage2/hid use/stage2/md \
+	use/stage2/ata use/stage2/fs use/stage2/hid use/stage2/md \
 	use/stage2/mmc use/stage2/net use/stage2/net-nfs use/stage2/cifs \
 	use/stage2/rtc use/stage2/scsi use/stage2/usb \
 	use/stage2/kms \
@@ -100,11 +100,11 @@ distro/server-v: distro/.server-v-base +installer \
 	use/install2/net use/install2/autoinstall \
 	use/apt-conf/branch use/install2/repo
 	@$(call add,RESCUE_BOOTARGS,nomodeset vga=0)
-	@$(call set,IMAGE_FLAVOUR,$(subst alt-9-,,$(IMAGE_NAME)))
-	@$(call set,META_VOL_ID,ALT Server-V 9.2.0 $(ARCH))
+	@$(call set,IMAGE_FLAVOUR,$(subst alt-10-,,$(IMAGE_NAME)))
+	@$(call set,META_VOL_ID,ALT Server-V 10.0.0 $(ARCH))
 	@$(call set,META_PUBLISHER,BaseALT Ltd)
 	@$(call set,META_VOL_SET,ALT)
-	@$(call set,META_APP_ID,ALT Server-V 9.2.0 $(ARCH) $(shell date +%F))
+	@$(call set,META_APP_ID,ALT Server-V 10.0.0 $(ARCH) $(shell date +%F))
 	@$(call set,DOCS,alt-server-v)
 	@$(call add,BASE_LISTS,virt/base.pkgs)
 	@$(call add,MAIN_LISTS,virt/extra.pkgs)
@@ -129,7 +129,7 @@ endif
 	@$(call add,DEFAULT_SERVICES_ENABLE,getty@tty1 getty@ttyS0)
 	@$(call add,DEFAULT_SERVICES_ENABLE,fstrim.timer)
 	@$(call add,DEFAULT_SERVICES_ENABLE,libvirtd)
-	@$(call add,DEFAULT_SERVICES_ENABLE,docker lxd kubelet kube-proxy)
+	@$(call add,DEFAULT_SERVICES_ENABLE,docker lxd crio kubelet kube-proxy)
 	@$(call add,DEFAULT_SERVICES_ENABLE,bind mysqld openvswitch)
 	@$(call add,DEFAULT_SERVICES_ENABLE,rsyslogd systemd-journal-gatewayd)
 	@$(call add,DEFAULT_SERVICES_DISABLE,powertop bridge gpm)

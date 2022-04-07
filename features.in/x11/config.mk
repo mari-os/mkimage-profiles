@@ -2,6 +2,7 @@
 +icewm: use/x11/icewm; @:
 +xmonad: use/x11/xmonad; @:
 +nm-gtk: use/x11/gtk/nm; @:
++screensaver: use/x11/xscreensaver/gl; @:
 
 ## hardware support
 # the very minimal driver set
@@ -120,7 +121,7 @@ use/x11/kde5-display-manager-lightdm: \
 	use/x11/%: use/x11/dm
 	@$(call set,THE_DISPLAY_MANAGER,$*)
 	@$(call set,THE_DM_SERVICE,lightdm)
-	@$(call add,PINNED_PACKAGES,kde5-display-manager-5-sddm:Extra)
+	@$(call add,PINNED_PACKAGES,kde5-display-manager-sddm:Extra)
 
 use/x11/gdm: \
 	use/x11/%: use/x11/dm
@@ -159,7 +160,7 @@ use/x11/gnome3: use/x11/xorg use/x11/gdm +pulse
 	@$(call add,THE_PACKAGES,gnome3-minimal gnome3-default)
 	@$(call add,IM_PACKAGES,imsettings-gsettings)
 
-use/x11/enlightenment: use/x11 use/net/connman +pulse
+use/x11/enlightenment: use/x11 use/net/connman use/power/acpi +pulse
 	@$(call add,THE_LISTS,$(call tags,enlightenment desktop))
 
 use/x11/lxde: use/x11
@@ -191,3 +192,13 @@ use/x11/leechcraft: use/x11
 
 use/x11/kde5: use/x11/xorg use/x11/kde/synaptic
 	@$(call add,THE_PACKAGES,kde5-big)
+
+## screensavers
+use/x11/xscreensaver:
+	@$(call add,THE_LISTS,$(call tags,base xscreensaver))
+
+use/x11/xscreensaver/gl: use/x11/xscreensaver
+	@$(call add,THE_LISTS,$(call tags,desktop xscreensaver))
+
+use/x11/xscreensaver/frontend: use/x11/xscreensaver
+	@$(call add,THE_PACKAGES,xscreensaver-frontend)

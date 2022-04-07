@@ -1,5 +1,5 @@
 Name: mkimage-profiles
-Version: 1.4.18
+Version: 1.4.27
 Release: alt1
 
 Summary: ALT based distribution metaprofile
@@ -128,6 +128,163 @@ mv %buildroot%mpdir/doc/mkimage-profiles.7 %buildroot%_man7dir/
 %endif
 
 %changelog
+* Tue Mar 01 2022 Anton Midyukov <antohami@altlinux.org> 1.4.27-alt1
+- regular.mk: add regular-xfce-install target
+- regular.mk: add use/firmware to regular-builder
+- regular.mk: set KFLAVOUR to un-def for regular-builder on x86_64, aarch64
+- dev: fix links to repositories for ports Sisyphus in generated source lists
+- vmguest: exclude xorg-dri-virtio for armh
+- plymouth: require branding-@BRANDING@-graphics
+- cleanup: add CLEANUP_LIVE_PACKAGES
+- mixin.mk: add polkit-rule-admin-root to mixin/regular-desktop
+- .gitignore: exclude .image.in/files/.empty
+- initrd-propagator: not add empty layer
+- build-vm: fix PATH to tar2fs with future mkimage
+- lib/profile.mk, build-distro: save current commit
+- vmguest: update stage1 modules list
+- stage2: stage1 modules list update
+- live.mk: add language submenu to grub-net-install
+- mixin.mk: control libnss-role is disabled for regular-desktops
+- kernel: exclude bcmwl kernel module, see ALT bug 41620
+- kworkstation: add latest commits from zerg@
+- kworkstation: add stage2 lists
+- all distro: add use/stage2/ata
+
+* Sun Feb 13 2022 Anton Midyukov <antohami@altlinux.org> 1.4.26-alt1
+- vmguest: fix stage1/modules.d/50-vmguest
+- sub.in/stage1: remove empty lines from kernel modules list
+- drm: exclude ancient from full drm
+- init: clear machine id (reported by obirvalger@)
+- basealt.mk: specify network backend for netplan in alt-workstation-cloud
+  (thanks obirvalger@)
+- regular-lxqt, regular-xfce: replace light-locker to xscreensaver
+- initrd-bootchain: simplify the procedure for adding modules to initrd
+
+* Mon Feb 07 2022 Anton Midyukov <antohami@altlinux.org> 1.4.25-alt1
+- stage2: add Baikal M support to 50-stage2-usb list
+- server-v: use crio instead of docker with k8s (thanks 
+  obirvalger@altlinux.org)
+- dev: fix owner:group for /home/altlinux/*
+- dev: add apt.conf's and source.list's for supported BRANCHES
+  and ARCHES
+- regular.mk: switch regular-builder on systemd, add regular-builder-sysv
+- disable gpm.service for regular-builder
+- add NetworkManager-tui to regular-builder
+- grub: Add ability to override terminal from external grub.cfg on ESP
+- init: do not add systemd-utils-standalone to use/init/sysv
+  (fix build target with sysvinit on p9)
+- uboot: update list for riscv64
+- alt-server.mk: switch to grub-efi for bootloading iso on x86_64 UEFI
+- init: not copy os-release in live, rescue (more not needed)
+- reports.mk: do not abort, if not available rpm cache
+- regular.mk: add use/tty for all regulars
+- repo: add the ability to select a repository mirror (default http/alt)
+- repo: setup mirror in install script 99-online-repo.sh
+- e2k: fix bootloading iso from CD/DVD
+
+* Thu Dec 30 2021 Anton Midyukov <antohami@altlinux.org> 1.4.24-alt1
+- regular-server-sysv: add use/power/acpi/button
+- fix META_VOL_ID for Starterkits
+- drop kernel-modules-igb, kernel-modules-e1000e (report by boyarsh@)
+- drop opensc, pccs-lite-openct package from base+smartcard,
+  workstation/smartcard lists (report by klark@)
+- made feature volumes available only for distro targets
+- slinux 10.0 (thanks sem@, jqt4@, iv@)
+- education.mk: drop targets rootfs for not supported platforms
+- add +vmguest feature for vm/alt-education, vm/alt-workstation,
+  vm/slinux and vm desktop regulars
+- apt-conf: replace IMAGE_INIT_LIST to PINNED_PACKAGES
+- vmguest: update vmguest modules list for support Hyper-v gen2
+
+* Mon Dec 20 2021 Anton Midyukov <antohami@altlinux.org> 1.4.23-alt1
+- lib/profile.mk: add branding-<BRANDING>-release to
+  PACKAGES_REQUIRES_INITROOT (Closes: 41570)
+- profile.mk: quote variables properly (thanks mike@)
+- mixin.mk, regular.mk: do not +power for regulars with systemd
+- syslinux: cleanup syslinux/.in/ always
+- oem: fix BASE_BRANDING to THE_BRANDING
+- pkg.in/lists: exclude varible NO_SORT_PACKAGES from package lists
+- install2, vmguest: add xorg-dri-vmwgfx to vmware drivers (thanks
+  zerg@)
+- x11: update use/x11/xorg
+- kernel: add kernel modules to initrd for framebuffer support
+  on SBC (RPi3, RPi4, Sunxi, Rockchip, Tegra)
+- basealt.mk: change firefox-esr to chromium for
+  vm/alt-workstation-rpi (thanks jqt4@)
+
+* Sat Dec 11 2021 Anton Midyukov <antohami@altlinux.org> 1.4.22-alt1
+- Revert "arm-rpi4: change firefox-esr to chromium"
+- Revert "regular-vm.mk, regular.mk: add wireless support"
+
+* Fri Dec 10 2021 Anton Midyukov <antohami@altlinux.org> 1.4.21-alt1
+- tar2fs: start partitions from 34 MiB for riscv64
+- add support build iso for riscv64
+- oem: not use/x11vnc for use/oem/vnc
+- oem: not use/net-eth/dhcp for use/oem/vnc
+- build.mk, params.txt: add parameter USE_QEMU
+- bin/archdep-filter: implement multi-matching (thanks mike@)
+- init: Set priority for systemd-utils-standalone package (use/init/sysv)
+- init: add apt-conf-ignore-systemd for sysvinit
+- install2: Set piority for installer-distro-common-stage2 package
+- live: Set piority for livecd-installer-features package
+- oem: Set piority for rootfs-installer-features package
+- regular.mk, regular-vm.mk: add NetworkManager to regular-builder
+- build-vm: add 20-grub-terminal script for setup terminal_output
+- use/net-eth: add dhcp ipv4 only support for networkd (thanks lakostis@)
+- features: add gitlab-runner (thanks lakostis@)
+- arm-rpi4: copy actualy dtb for last kernel
+- net: fix setup NetworkManager controlled with etcnet (fix typo in 50-net-nm)
+- alt-server: add latest commits (thanks boyarsh@)
+- alt-workstation: add latest commits (thanks sem@)
+- slinux: add latest commits (thanks sem@)
+- alt-education: add latest commits (thanks cas@)
+- server-v: add latest commits (thanks shaba@)
+
+* Mon Nov 15 2021 Anton Midyukov <antohami@altlinux.org> 1.4.20-alt1
+- ve.mk: refactor those ve/lxc-* dups (thanks mike@)
+- ve.mk: initial ve/lxc-builder (thanks mike@)
+- ve.mk: refactor those ve/systemd-* dups
+- x11: Add graphics card support for HiFive Unmatched (thanks jqt4@)
+- x11: use/x11/amdgpu too when use/x11/3d (thanks mike@)
+- e2k: more patches by mike@
+- x11, lists/tagged: initial use/x11/xscreensaver
+- net: fix build without etcnet
+- l10n: add base+l10n tagged list
+- Revert "regular.mk: add grub submenu 'Network installation'"
+- grub: add submenu for stagename to netinstall.cfg
+- alt-server: add latest commits (thanks boyarsh@)
+- alt-workstation: add latest commits (thanks sem@)
+- slinux: add latest commits (thanks sem@)
+- alt-education: add latest commits (thanks cas@)
+- server-v: add latest commits (thanks shaba@)
+- virt/base.pkgs: drop libnss-resolve
+
+* Mon Oct 18 2021 Anton Midyukov <antohami@altlinux.org> 1.4.19-alt1
+- syslinux: fix broken 01-syslinux script in previous version 1.4.18
+- regular-vm.mk, regular.mk: drop udev-rule-generator
+- kernel: add rtw89 wifi kernel module for support Realtek RTL8852AE
+  (thanks zerg@)
+- install2: don't remove mmc kernel modules to allow USB 0bda:0129 cardreader
+  (thanks zerg@)
+- install2: do not cleanup cec and rc kernel modules (needed for amdgpu)
+  (thanks zerg@)
+- kernel/stage1: prevent to include nvidia to stage1 (thanks zerg@)
+- drm: drop use/drm/stage2/nvidia target
+- kworkstation: add latest commits from zerg@
+- initrd-bootchain: add etwork interface naming udev rules
+- initrd-bootchain: allow BOOTCHAIN_LOGFILE, BOOTCHAIN_LOG_VT to be reassigned
+- build-vm: create initrd from a special config (/etc/initrd.mk.oem)
+- kernel: add use/kernel/disable-usb-autosuspend
+- mixin.mk: disable usb autosuspend for regular-x11
+- kernel: add drivers/mfd drivers/clk to initrd for aarch64, armh
+- grub: remove 'ip=dhcp' from netinstall.cfg
+- isomd5sum: drop obsoletes feature
+- build.mk: Do nothing with IMAGEDIR if $(DIRECT_TARGETS) is running
+- init: Fix install /etc/os-release (thanks sem@)
+- workstation: add latest commits from sem@
+- slinux: add latest commits from sem@
+- education: add latest commits from cas@
+
 * Mon Sep 20 2021 Anton Midyukov <antohami@altlinux.org> 1.4.18-alt1
 - If the BRANCH variable is not empty, and the BRANDING variable on
   the contrary is empty, then BRANDING is assigned to alt-starterkit.
