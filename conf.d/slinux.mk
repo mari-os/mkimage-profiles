@@ -11,7 +11,7 @@ distro/slinux: distro/.installer use/slinux/full use/rescue/base
 	@$(call set,INSTALLER,simply-linux)
 	@$(call add,MAIN_GROUPS,slinux/emulators-full slinux/games-base slinux/games slinux/games-full slinux/graphics-base slinux/graphics slinux/graphics-full-inkscape slinux/multimedia-full-audacity slinux/multimedia-base slinux/multimedia-full-cheese slinux/multimedia slinux/multimedia-full-shotcut slinux/multimedia-full-sound-juicer slinux/multimedia-full-obs-studio slinux/net-base)
 ifneq (,$(filter-out e2k%,$(ARCH)))
-	@$(call add,MAIN_GROUPS,slinux/dropbox slinux/graphics-full-shotwell)
+	@$(call add,MAIN_GROUPS,slinux/dropbox slinux/graphics-full-shotwell slinux/flatpak)
 endif
 	@$(call set,META_VOL_ID,Simply Linux $(DISTRO_VERSION) $(ARCH))
 	@$(call set,META_APP_ID,Simply Linux $(DISTRO_VERSION) $(ARCH) $(shell date +%F))
