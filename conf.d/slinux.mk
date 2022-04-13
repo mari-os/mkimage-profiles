@@ -2,7 +2,7 @@
 
 ifeq (distro,$(IMAGE_CLASS))
 
-distro/slinux-live: distro/.livecd-install use/slinux/base
+distro/slinux-live: distro/.livecd-install use/slinux/base use/slinux/live
 	@$(call add,THE_LISTS,slinux/live-install)
 	@$(call set,META_VOL_ID,Simply Linux live $(DISTRO_VERSION) $(ARCH))
 	@$(call set,META_APP_ID,Simply Linux live $(DISTRO_VERSION) $(ARCH) $(shell date +%F))
@@ -16,7 +16,7 @@ endif
 	@$(call set,META_VOL_ID,Simply Linux $(DISTRO_VERSION) $(ARCH))
 	@$(call set,META_APP_ID,Simply Linux $(DISTRO_VERSION) $(ARCH) $(shell date +%F))
 ifneq (,$(filter-out e2k%,$(ARCH)))
-	@$(call set,KFLAVOURS,std-def)
+	@$(call set,KFLAVOURS,un-def)
 endif
 endif
 

@@ -47,6 +47,7 @@ vconsole-setup-kludge@X86
 fwupd@x86_64
 
 rpminstall
+appinstall@X86
 gnome-software
 gnome-software-disable-updates
 
@@ -57,6 +58,9 @@ libavcodec57@E2K
 libavdevice57@E2K
 libavfilter6@E2K
 libavformat57@E2K
+
+# Russian Trusted Root CA
+ca-certificates-digital.gov.ru
 
 disable-usb-autosuspend@X86
 
@@ -87,6 +91,7 @@ alterator-printers
 alterator-multiseat
 
 test-audio
+pa-conf-switch-on-connect
 
 glmark2@aarch64
 glmark2-es2@aarch64

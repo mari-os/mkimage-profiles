@@ -47,8 +47,7 @@ endif
 # WM base target
 distro/.regular-wm: distro/.regular-x11 \
 	mixin/regular-desktop +vmguest \
-	use/live/rw use/live/install
-	@$(call add,LIVE_PACKAGES,livecd-install-apt-cache)
+	use/live/rw use/live/install; @:
 
 # DE base target
 # TODO: use/plymouth/live when luks+plymouth is done, see also #28255
@@ -198,7 +197,9 @@ distro/regular-deepin: distro/.regular-gtk mixin/regular-deepin; @:
 distro/regular-kde5: distro/.regular-desktop +nm \
 	mixin/regular-kde5 use/domain-client +plymouth; @:
 
-distro/regular-robo: distro/regular-mate +robotics use/live/ru; @:
+distro/regular-robo: distro/regular-mate use/live/ru use/x11/3d
+	@$(call add,THE_LISTS,robotics/reprap)
+	@$(call add,THE_LISTS,robotics/umki)
 
 distro/regular-rescue: distro/.regular-base mixin/regular-rescue  \
 	use/rescue/rw use/efi/shell use/efi/memtest86 \

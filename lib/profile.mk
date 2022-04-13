@@ -113,9 +113,7 @@ endif
 	@$(call add,PINNED_PACKAGES,branding-$$(BRANDING)-notes:Essential)
 	@$(call add,PINNED_PACKAGES,branding-$$(BRANDING)-release:Essential)
 	@$(call add,PINNED_PACKAGES,branding-$$(BRANDING)-slideshow:Essential)
-ifeq (,$(REPO:altlinux%=))
 	@$(call set,PACKAGES_REQUIRED_INITROOT,basesystem branding-$$(BRANDING)-release)
-endif
 	@$(call xport,ARCH)
 	@mp-commit "$(BUILDDIR)" "image configuration defaults set"
 
@@ -134,7 +132,8 @@ profile/dump-vars:
 	fi $(LOG)
 
 # step 3 entry point: copy the needed parts into BUILDDIR
+profile/populate: SHELL=/bin/bash
 profile/populate: profile/finalize profile/dump-vars make-aptbox
 	@for dir in sub.in features.in pkg.in; do \
-		$(MAKE) -C $$dir $(LOG); \
+		$(MAKE) -C $$dir $(LOG_STDERR); \
 	done
