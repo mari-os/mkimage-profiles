@@ -83,6 +83,7 @@ if [ ! -e "$boot/locale" -a -f "$CFG" ]; then
 		[ -f $fp ] && cp -arf "$fp" "locale/$i.mo"
 	done
 fi
+cp -arf /usr/share/locale/mhr/LC_MESSAGES/grub.mo locale/mhr.mo
 
 exit 0
 

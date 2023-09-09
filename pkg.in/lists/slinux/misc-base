@@ -71,7 +71,6 @@ mousepad
 mate-calc
 synaptic
 synaptic-usermode
-apt-indicator
 gnome-software@!riscv64
 gnome-software-disable-updates@!riscv64
 packagekit@!riscv64
@@ -215,3 +214,5 @@ eepm
 
 # Russian Trusted Root CA
 ca-certificates-digital.gov.ru
+
+mariy_sl

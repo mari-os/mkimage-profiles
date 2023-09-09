@@ -5,7 +5,7 @@ cd /usr/share/locale
 rm -r *@*
 for i in */; do
 	case "$i" in
-	be*|en*|ru*|uk*) continue;;
+	be*|en*|ru*|mhr*|uk*) continue;;
 	esac
 	rm -r "$i"
 done

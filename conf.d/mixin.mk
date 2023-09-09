@@ -139,7 +139,6 @@ endif
 
 mixin/office: use/fonts/ttf/google use/fonts/ttf/xo
 	@$(call add,THE_LISTS,$(call tags,desktop && (cups || office)))
-	@$(call add,THE_PACKAGES,apt-indicator)
 
 # NB: never ever use/syslinux/ui/gfxboot here as gfxboot mangles
 #     kernel cmdline resulting in method:disk instead of method:cdrom
